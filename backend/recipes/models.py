@@ -19,13 +19,13 @@ class Tag(models.Model):
         unique=True,
         verbose_name='Уникальный слаг'
     )
-
-    def __str__(self):
-        return self.name
-
+ 
     class Meta:
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
+
+    def __str__(self):
+        return self.name
 
 
 class Ingredient(models.Model):
@@ -41,7 +41,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = "Ингредиенты"
-        ordering = ['name']
+        # ordering = ['name']
 
     def __str__(self):
         return self.name
@@ -115,13 +115,13 @@ class RecipeIngredient(models.Model):
                 'Минимальное количество ингредиентов 1'
             ),
         ),
-    verbose_name='Количество ингредиентов',
+        verbose_name='Количество ингредиентов',
     )
 
     class Meta:
         verbose_name = 'Рецепт и ингредиенты'
         verbose_name_plural = 'Рецепты и ингредиенты'
-        ordering = ['-id']
+        # ordering = ['-id']
     # constraints = [
     #     models.UniqueConstraint(
     #         fields=['recipe', 'ingredient'],
@@ -145,9 +145,6 @@ class Favorite(models.Model):
         related_name='favorites'
     )
 
-    def __str__(self):
-        return f'{self.user}, {self.recipe}'
-
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -157,6 +154,9 @@ class Favorite(models.Model):
         ]
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
+
+    def __str__(self):
+        return f'{self.user}, {self.recipe}'
 
 
 class ShoppingCart(models.Model):
@@ -171,9 +171,6 @@ class ShoppingCart(models.Model):
         related_name='shopping_cart'
     )
 
-    def __str__(self):
-        return f'{self.user}, {self.recipe}'
-
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -183,3 +180,6 @@ class ShoppingCart(models.Model):
         ]
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
+
+    def __str__(self):
+        return f'{self.user}, {self.recipe}'
