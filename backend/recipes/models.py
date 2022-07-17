@@ -111,7 +111,7 @@ class RecipeIngredient(models.Model):
     )
     ingredient = models.ForeignKey(
         Ingredient,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name='ingredients_amounts'
     )
     amount = models.PositiveSmallIntegerField(
@@ -121,7 +121,7 @@ class RecipeIngredient(models.Model):
                 'Минимальное количество ингредиентов 1'
             ),
         ),
-        verbose_name='Количество ингредиентов',
+        verbose_name='Количество ингредиентов'
     )
 
     class Meta:
@@ -136,7 +136,7 @@ class RecipeIngredient(models.Model):
     # ]
 
     def __str__(self):
-        return f'{self.recipe} {self.ingredients}'
+        return f'{self.recipe} {self.ingredient}'
 
 
 class Favorite(models.Model):
