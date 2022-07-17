@@ -1,27 +1,29 @@
-# from django.urls import include, path
-# from rest_framework.routers import DefaultRouter
+from django.urls import include, path
+from rest_framework.routers import DefaultRouter
 
-# from .views import (
+from api.views import (
+    TagViewSet,
+    RecipeViewSet,
 #     FavoriteViewSet,
 #     IngredientViewSet,
-#     RecipeViewSet,
+
 #     ShoppingCartViewSet,
 #     SubscribeListViewSet,
 #     SubscribeView,
-#     TagViewSet,
+
 #     # UsersViewSet,
-# )
+)
 
-# app_name = 'api'
+app_name = 'api'
 
-# router = DefaultRouter()
+router = DefaultRouter()
 # # router.register(r'users', UsersViewSet)
-# router.register(r'recipes', RecipeViewSet, basename='recipes')
+router.register(r'recipes', RecipeViewSet, basename='recipes')
 # router.register(r'ingredients', IngredientViewSet, basename='ingredients')
-# router.register(r'tags', TagViewSet, basename='tag')
+router.register(r'tags', TagViewSet, basename='tags')
 
 
-# urlpatterns = [
+urlpatterns = [
 #     path(
 #         'users/subscriptions/',
 #         SubscribeListViewSet.as_view({'get': 'list'}),
@@ -44,5 +46,5 @@
 #         SubscribeView.as_view(),
 #         name='follow'
 #     ),
-#     path('', include(router.urls)),
-# ]
+    path('', include(router.urls)),
+]
