@@ -38,7 +38,7 @@ class User(AbstractUser):
         return self.username
 
 
-class Follow(models.Model):
+class Subscribe(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -56,10 +56,10 @@ class Follow(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'author'],
-                name='user_author'
+                name='unique_subscribe'
             )
         ]
-        verbose_name = 'Подписки'
+        verbose_name = 'Подписка'
         verbose_name_plural = "Подписки"
 
     def __str__(self):

@@ -14,7 +14,13 @@ SECRET_KEY = '&qu-*chic(=vr6b_qzttmw@o4zvb@*se(m=qr3)vei9rg+h-mo'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = [
+#     'localhost',
+#     '127.0.0.1',
+#     '[::1]',
+#     'testserver',
+# ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -97,7 +103,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
+# LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
