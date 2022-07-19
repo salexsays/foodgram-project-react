@@ -45,6 +45,7 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
+    
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
