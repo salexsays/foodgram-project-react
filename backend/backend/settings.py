@@ -29,10 +29,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django_filters',
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    # 'colorfield',
     'api.apps.ApiConfig',
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
@@ -50,7 +51,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
-# TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -104,7 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'ru'
-# LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
@@ -130,26 +129,30 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
-    # ],
    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 6,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ],
 }
 
-# DJOSER = {
-#     'SERIALIZERS': {
+DJOSER = {
+    'SERIALIZERS': {
 #         'token_create': 'users.serializers.TokenCreateSerializer',
 #         'user_create': 'users.serializers.UserRegistrationSerializer',
-#         'user': 'users.serializers.UserSerializer',
+        'user': 'users.serializers.UserSerializer',
 #         'current_user': 'users.serializers.UserSerializer',
-#     },
+    },
+    'PERMISSIONS': {
+        'user': ['rest_framework.permissions.IsAuthenticated'],
+        'user_list': ['rest_framework.permissions.AllowAny'],
+    }
 #     'PERMISSIONS': {
 #         'user_list': ['recipes.permissions.AuthorOrReadOnly'],
 #         'user': ['recipes.permissions.AuthorOrReadOnly'],
 #     },
 #     'HIDE_USERS': False,
-# }
+}

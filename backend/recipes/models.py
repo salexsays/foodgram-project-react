@@ -1,6 +1,7 @@
 # from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator
 from django.db import models
+# from pytils.translit import slugify
 
 from users.models import User
 
@@ -28,6 +29,11 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
+    # def save(self, *args, **kwargs):
+    #     if not self.slug:
+    #         self.slug = slugify(self.name)
+    #     super().save(*args, **kwargs)
 
 
 class Ingredient(models.Model):
@@ -61,21 +67,21 @@ class Recipe(models.Model):
         verbose_name='Название'
     )
     image = models.ImageField(
-        verbose_name="Картинка",
-        upload_to="recipes/images/"
+        upload_to="recipes/images/",
+        verbose_name="Картинка"
     )
     text = models.TextField(
         verbose_name='Описание'
     )
     ingredients = models.ManyToManyField(
         Ingredient,
-        verbose_name='Список ингредиентов',
-        through='RecipeIngredient'
+        through='IngredientAmount',
+        verbose_name='Список ингредиентов'
     )
     tags = models.ManyToManyField(
         Tag,
-        verbose_name='Тэги',
-        related_name='recipes'
+        related_name='recipes',
+        verbose_name='Тэги'
     )
     cooking_time = models.PositiveIntegerField(
         validators=[
@@ -91,28 +97,25 @@ class Recipe(models.Model):
         verbose_name='Дата создания'
     )
     
-    # def favorites_count(self):
-    #     return self.favorites.count()
-
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-        ordering = ('-pub_date', )
+        ordering = ['-pub_date']
 
     def __str__(self):
         return self.name
 
 
-class RecipeIngredient(models.Model):
+class IngredientAmount(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='ingredients_amounts'
+        related_name='ingredient_amount'
     )
     ingredient = models.ForeignKey(
         Ingredient,
-        on_delete=models.CASCADE,
-        related_name='ingredients_amounts'
+        on_delete=models.PROTECT,
+        related_name='ingredient_amount'
     )
     amount = models.PositiveSmallIntegerField(
         validators=(
@@ -127,13 +130,12 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиента в рецепте'
         verbose_name_plural = 'Ингредиентов в рецепте'
-        # ordering = ['-id']
-    # constraints = [
-    #     models.UniqueConstraint(
-    #         fields=['recipe', 'ingredient'],
-    #         name='unique ingredient'
-    #     )
-    # ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['recipe', 'ingredient'],
+                name='unique ingredient'
+            )
+        ]
 
     def __str__(self):
         return f'{self.recipe} {self.ingredient}'
@@ -155,7 +157,7 @@ class Favorite(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='favorite'
+                name='unique_favorite'
             )
         ]
         verbose_name = 'Избранное'
@@ -165,7 +167,7 @@ class Favorite(models.Model):
         return f'{self.user}, {self.recipe}'
 
 
-class Cart(models.Model):
+class ShoppingCart(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
