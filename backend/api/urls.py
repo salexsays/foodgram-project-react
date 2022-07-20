@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (DownloadShoppingCart, FollowViewSet,
                     IngredientsViewSet, RecipeViewSet, 
                     TagsViewSet)
+# from .views import FollowViewSet
 
 app_name = 'api'
 
@@ -15,16 +16,16 @@ router.register(r'ingredients', IngredientsViewSet, basename='ingredients')
 
 
 urlpatterns = [
-    path(
-        'users/<int:author_id>/subscribe/',
-        FollowViewSet.as_view({'post': 'create', 'delete': 'destroy'}),
-        name='subscribe'
-    ),
-    path(
-        'users/subscriptions/',
-        FollowViewSet.as_view({'get': 'list'}),
-        name='subscriptions'
-    ),
+    # path(
+    #     'users/<int:author_id>/subscribe/',
+    #     FollowViewSet.as_view({'post': 'create', 'delete': 'destroy'}),
+    #     name='subscribe'
+    # ),
+    # path(
+    #     'users/subscriptions/',
+    #     FollowViewSet.as_view({'get': 'list'}),
+    #     name='subscriptions'
+    # ),
     path(
         'recipes/download_shopping_cart/',
         DownloadShoppingCart.as_view(),

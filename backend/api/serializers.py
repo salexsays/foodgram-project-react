@@ -45,7 +45,7 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField()
-    
+
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
@@ -62,9 +62,16 @@ class RecipeReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
         fields = (
-            'id', 'author', 'name', 'text', 'image',
-            'ingredients', 'tags', 'cooking_time',
-            'is_favorited', 'is_in_shopping_cart',
+            'id',
+            'author',
+            'name',
+            'text',
+            'image',
+            'ingredients',
+            'tags',
+            'cooking_time',
+            'is_favorited',
+            'is_in_shopping_cart',
         )
 
     def get_ingredients(self, obj):
@@ -120,8 +127,8 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     def validate_cooking_time(self, data):
         if data <= 0:
-            raise ValidationError('Время готовки не может быть'
-                                  ' отрицательным числом или нулем')
+            raise ValidationError('Время приготовления должно быть'
+                                  ' больше 0')
         return data
 
     def add_ingredients(self, ingredients, recipe):
@@ -171,19 +178,31 @@ class RecipeSubscriptionSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField(source='author.id')
-    email = serializers.ReadOnlyField(source='author.email')
-    username = serializers.ReadOnlyField(source='author.username')
-    first_name = serializers.ReadOnlyField(source='author.first_name')
-    last_name = serializers.ReadOnlyField(source='author.last_name')
+    # id = serializers.ReadOnlyField(source='author.id')
+    # email = serializers.ReadOnlyField(source='author.email')
+    # username = serializers.ReadOnlyField(source='author.username')
+    # first_name = serializers.ReadOnlyField(source='author.first_name')
+    # last_name = serializers.ReadOnlyField(source='author.last_name')
     is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
 
+    # user = serializers.IntegerField(source='user.id')
+    following = serializers.IntegerField(source='author.id')
+
     class Meta:
         model = Follow
-        fields = ('id', 'email', 'username', 'first_name', 'last_name',
-                  'is_subscribed', 'recipes', 'recipes_count')
+        fields = (
+            'id',
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes',
+            'recipes_count'
+            # 'user', 'author'
+        )
     
     def validate_following(self, following):
         if self.context.get('request').method == 'POST':
