@@ -17,7 +17,7 @@ router.register(r'ingredients', IngredientsViewSet, basename='ingredients')
 urlpatterns = [
     path(
         'users/<int:author_id>/subscribe/',
-        FollowViewSet.as_view({'get': 'create', 'delete': 'destroy'}),
+        FollowViewSet.as_view({'post': 'create', 'delete': 'destroy'}),
         name='subscribe'
     ),
     path(
