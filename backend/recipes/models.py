@@ -22,7 +22,7 @@ class Tag(models.Model):
         unique=True,
         verbose_name='Уникальный слаг'
     )
- 
+
     class Meta:
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
@@ -96,7 +96,7 @@ class Recipe(models.Model):
         auto_now_add=True,
         verbose_name='Дата создания'
     )
-    
+
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'

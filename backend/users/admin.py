@@ -15,6 +15,7 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ('email', 'username',)
     search_fields = ('username', 'email',)
 
+
 class FollowAdmin(admin.ModelAdmin):
     list_display = (
         'id',

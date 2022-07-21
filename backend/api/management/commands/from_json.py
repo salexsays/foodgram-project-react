@@ -9,6 +9,7 @@ from recipes.models import Ingredient
 data_file = 'ingredients.json'
 model = Ingredient
 
+
 class Command(BaseCommand):
     help = 'Load data from ingredients.json to DB.'
 

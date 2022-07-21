@@ -1,13 +1,13 @@
 # from django.db.models import F
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
-from drf_extra_fields.fields import Base64ImageField
 
-from users.models import User, Follow
-from users.serializers import UserSerializer
 from recipes.models import (Favorite, Ingredient, IngredientAmount, Recipe,
-                     ShoppingCart, Tag)
+                            ShoppingCart, Tag)
+from users.models import Follow, User
+from users.serializers import UserSerializer
 
 
 class IngredientsSerializer(serializers.ModelSerializer):
@@ -116,13 +116,14 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             'id', 'author', 'name', 'text', 'image',
             'ingredients', 'tags', 'cooking_time',
         )
+
     def validate_ingredients(self, data):
         ingredients = self.initial_data.get('ingredients')
-        if not ingredients: 
+        if not ingredients:
             raise ValidationError('Выберите ингредиенты')
         for ingredient in ingredients:
             if int(ingredient['amount']) <= 0:
-                raise ValidationError('Количество должно быть положительным')
+                raise ValidationError('Количество должно быть больше 0')
         return data
 
     def validate_cooking_time(self, data):
@@ -133,7 +134,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     def add_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
-            ingredient_id=ingredient['id']
+            ingredient_id = ingredient['id']
             IngredientAmount.objects.create(
                 recipe=recipe,
                 ingredient=ingredient_id,
@@ -166,9 +167,8 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         return recipe
 
     def to_representation(self, recipe):
-        data = RecipeReadSerializer(recipe, context={'request':
+        return RecipeReadSerializer(recipe, context={'request':
                                     self.context.get('request')}).data
-        return data
 
 
 class RecipeSubscriptionSerializer(serializers.ModelSerializer):
@@ -187,8 +187,9 @@ class FollowSerializer(serializers.ModelSerializer):
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
 
+    # following = serializers.SerializerMethodField()
     # user = serializers.IntegerField(source='user.id')
-    following = serializers.IntegerField(source='author.id')
+    # following = serializers.IntegerField(source='author.id')
 
     class Meta:
         model = Follow
@@ -203,10 +204,15 @@ class FollowSerializer(serializers.ModelSerializer):
             'recipes_count'
             # 'user', 'author'
         )
-    
+
+    # def validate_following(self, obj):
+    #     return Follow.objects.filter(
+    #         user=obj.user, author=obj.author
+    #     ).exists()
+
     def validate_following(self, following):
         if self.context.get('request').method == 'POST':
-            if self.context.get('request').user == following:
+            if self.context.get('request').user.id == following:
                 raise ValidationError('Нельзя подписаться на себя')
         return following
 
@@ -234,7 +240,7 @@ class FavoritesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = '__all__'
-    
+
     def validate(self, data):
         user = data['user']
         recipe_id = data['recipe'].id

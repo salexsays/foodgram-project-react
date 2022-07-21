@@ -129,7 +129,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-   'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -141,18 +141,18 @@ REST_FRAMEWORK = {
 
 DJOSER = {
     'SERIALIZERS': {
-#         'token_create': 'users.serializers.TokenCreateSerializer',
-#         'user_create': 'users.serializers.UserRegistrationSerializer',
+        # 'token_create': 'users.serializers.TokenCreateSerializer',
+        # 'user_create': 'users.serializers.UserRegistrationSerializer',
         'user': 'users.serializers.UserSerializer',
-#         'current_user': 'users.serializers.UserSerializer',
+        # 'current_user': 'users.serializers.UserSerializer',
     },
     'PERMISSIONS': {
         'user': ['rest_framework.permissions.IsAuthenticated'],
         'user_list': ['rest_framework.permissions.AllowAny'],
     }
-#     'PERMISSIONS': {
-#         'user_list': ['recipes.permissions.AuthorOrReadOnly'],
-#         'user': ['recipes.permissions.AuthorOrReadOnly'],
-#     },
-#     'HIDE_USERS': False,
+    # 'PERMISSIONS': {
+    #     'user_list': ['recipes.permissions.AuthorOrReadOnly'],
+    #     'user': ['recipes.permissions.AuthorOrReadOnly'],
+    # },
+    # 'HIDE_USERS': False,
 }

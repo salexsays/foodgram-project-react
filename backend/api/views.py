@@ -1,23 +1,23 @@
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django_filters.rest_framework import DjangoFilterBackend
 
-from users.models import User, Follow
-from .filters import IngredientFilter, RecipeFilter
-from .mixins import RetriveAndListViewSet
 from recipes.models import (Favorite, Ingredient, IngredientAmount, Recipe,
                             ShoppingCart, Tag)
+from users.models import Follow, User
+
+from .filters import IngredientFilter, RecipeFilter
+from .mixins import RetriveAndListViewSet
 from .pagination import CustomPageNumberPaginator
 from .permissions import IsAdminOrIsAuthorOrReadOnly
 from .serializers import (FavoritesSerializer, FollowSerializer,
                           IngredientsSerializer, RecipeReadSerializer,
                           RecipeSubscriptionSerializer, RecipeWriteSerializer,
                           ShoppingCartSerializer, TagSerializer)
-# from users.serializers import FollowSerializer
 
 
 class IngredientsViewSet(RetriveAndListViewSet):
@@ -71,7 +71,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         favorite.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['POST', 'DELETE'],
+    @action(
+        methods=['POST', 'DELETE'],
         detail=True,
         permission_classes=(permissions.IsAuthenticated, )
     )
@@ -139,6 +140,7 @@ class FollowViewSet(viewsets.ModelViewSet):
     #         context={'request': request})
     #     return self.get_paginated_response(serializer.data)
 
+
 class DownloadShoppingCart(APIView):
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ['get', ]
@@ -147,9 +149,10 @@ class DownloadShoppingCart(APIView):
         user = request.user
         ingredients = IngredientAmount.objects.filter(
             recipe__shopping_cart__user=user).values_list(
-                'ingredient__name', 'amount', 'ingredient__measurement_unit',
-                named=True
-                )
+                'ingredient__name',
+                'amount',
+                'ingredient__measurement_unit',
+                named=True)
         buying_list = {}
         for ingredient in ingredients:
             name = ingredient.ingredient__name
@@ -166,7 +169,7 @@ class DownloadShoppingCart(APIView):
         wishlist = []
         for item in buying_list:
             wishlist.append(f'{item} - {buying_list[item]["amount"]} '
-                      f'{buying_list[item]["measurement_unit"]} \n')
+                            f'{buying_list[item]["measurement_unit"]} \n')
         wishlist.append('\n')
         wishlist.append('FoodGram, 2022')
         response = HttpResponse(wishlist, 'Content-Type: text/plain')
