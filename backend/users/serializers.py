@@ -9,8 +9,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'email', 'id', 'username',
-            'first_name', 'last_name', 'is_subscribed'
+            'id',
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed'
         )
 
     def get_is_subscribed(self, obj):
@@ -18,5 +22,6 @@ class UserSerializer(serializers.ModelSerializer):
         if request is None or request.user.is_anonymous:
             return False
         return Follow.objects.filter(
-            user=request.user, author=obj
+            user=request.user,
+            author=obj
         ).exists()

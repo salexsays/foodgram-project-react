@@ -112,10 +112,6 @@ class FollowViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return Follow.objects.filter(user=user)
 
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     return User.objects.filter(following__user=user)
-
     def perform_create(self, serializer):
         author = get_object_or_404(User, pk=self.kwargs.get('author_id'))
         serializer.save(user=self.request.user, author=author)
@@ -125,20 +121,6 @@ class FollowViewSet(viewsets.ModelViewSet):
         author = get_object_or_404(User, pk=self.kwargs.get('author_id'))
         follow = get_object_or_404(Follow, user=user, author=author)
         follow.delete()
-
-    # @action(
-    #     detail=False,
-    #     permission_classes=(permissions.IsAuthenticated,))
-    # def subscriptions(self, request):
-    #     """Получить на кого пользователь подписан."""
-
-    #     user = request.user
-    #     queryset = Follow.objects.filter(user=user)
-    #     pages = self.paginate_queryset(queryset)
-    #     serializer = FollowSerializer(
-    #         pages, many=True,
-    #         context={'request': request})
-    #     return self.get_paginated_response(serializer.data)
 
 
 class DownloadShoppingCart(APIView):
