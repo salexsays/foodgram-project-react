@@ -1,7 +1,13 @@
 from django.contrib import admin
 
-from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
-                     ShoppingCart, Tag)
+from .models import (
+    Favorite,
+    Ingredient,
+    IngredientAmount,
+    Recipe,
+    ShoppingCart,
+    Tag,
+)
 
 
 class IngredientAmountInLine(admin.TabularInline):
@@ -9,52 +15,29 @@ class IngredientAmountInLine(admin.TabularInline):
 
 
 class IngredientAdmin(admin.ModelAdmin):
-    list_filter = (
-        'id',
-        'name',
-        'measurement_unit',
-    )
-    search_fields = ('name',)
+    list_display = ('name', 'measurement_unit')
+    list_filter = ('name',)
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'name',
-        'author'
-    )
-    list_filter = (
-        'author',
-        'name',
-        'tags'
-    )
+    list_display = ('name', 'author', 'count_favorites')
+    list_filter = ('author', 'name', 'tags')
     inlines = [IngredientAmountInLine]
-    empty_value_display = '-пусто-'
+
+    def count_favorites(self, obj):
+        return obj.favorites.count()
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = (
-        'name',
-        'color',
-        'slug'
-    )
-    empty_value_display = '-пусто-'
+    list_display = ('name', 'color', 'slug')
 
 
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'recipe',
-        'user'
-    )
+    list_display = ('recipe', 'user')
 
 
 class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'user',
-        'recipe'
-    )
+    list_display = ('user', 'recipe')
 
 
 admin.site.register(Ingredient, IngredientAdmin)
