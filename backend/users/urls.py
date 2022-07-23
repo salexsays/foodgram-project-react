@@ -1,4 +1,4 @@
-from api.views import FollowViewSet
+# from api.views import FollowViewSet
 from django.urls import include, path, re_path
 from rest_framework.routers import DefaultRouter
 

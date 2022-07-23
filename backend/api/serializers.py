@@ -4,8 +4,14 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
 
-from recipes.models import (Favorite, Ingredient, IngredientAmount, Recipe,
-                            ShoppingCart, Tag,)
+from recipes.models import (
+    Favorite,
+    Ingredient,
+    IngredientAmount,
+    Recipe,
+    ShoppingCart,
+    Tag,
+)
 from users.models import Follow, User
 from users.serializers import UserSerializer
 
@@ -217,10 +223,7 @@ class FollowSerializer(serializers.ModelSerializer):
     #     return following
 
     def get_is_subscribed(self, obj):
-        return Follow.objects.filter(
-            user=obj.user,
-            author=obj.author
-        ).exists()
+        return Follow.objects.filter(user=obj.user, author=obj.author).exists()
 
     def get_recipes(self, obj):
         request = self.context.get('request')
@@ -232,32 +235,6 @@ class FollowSerializer(serializers.ModelSerializer):
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj.author).count()
-
-
-# class FollowCreateSerializer(serializers.ModelSerializer):
-#     user = serializers.IntegerField(source='user.id')
-#     author = serializers.IntegerField(source='author.id')
-
-#     class Meta:
-#         model = Follow
-#         fields = ['user', 'author']
-
-#     def create(self, validated_data):
-#         author = get_object_or_404(
-#             User,
-#             pk=validated_data.get('author').get('id')
-#         )
-#         user = validated_data.get('user')
-#         return Follow.objects.create(user=user, author=author)
-
-#     def validate(self, data):
-#         if Follow.objects.filter(
-#                 author__id=data.get('author').get('id'),
-#                 user__id=data.get('user').get('id')).exists():
-#             raise serializers.ValidationError(
-#                 'Вы уже подписаны на этого автора'
-#             )
-#         return data
 
 
 class FavoritesSerializer(serializers.ModelSerializer):
