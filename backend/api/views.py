@@ -143,8 +143,9 @@ class DownloadShoppingCart(APIView):
         wishlist = []
         for item in buying_list:
             wishlist.append(
-                f'{item} - {buying_list[item]["amount"]} '
-                f'{buying_list[item]["measurement_unit"]} \n'
+                f'{item} '
+                f'({buying_list[item]["measurement_unit"]}) '
+                f'- {buying_list[item]["amount"]}\n'
             )
         wishlist.append('\n')
         wishlist.append('FoodGram, 2022')
