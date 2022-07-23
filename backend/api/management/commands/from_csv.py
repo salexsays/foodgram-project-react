@@ -15,16 +15,14 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         with open(
-            os.path.join(BASE_DIR, 'data', data_file),
-            encoding='utf-8'
+            os.path.join(BASE_DIR, 'data', data_file), encoding='utf-8'
         ) as csv_file:
             for row in csv.reader(csv_file):
                 name, measurement_unit = row
                 model.objects.get_or_create(
-                    name=name,
-                    measurement_unit=measurement_unit
+                    name=name, measurement_unit=measurement_unit
                 )
         print(f'  Importing data from file {data_file}... OK')
-        self.stdout.write(self.style.SUCCESS(
-            'The all data from .csv-files are imported.')
+        self.stdout.write(
+            self.style.SUCCESS('The all data from .csv-files are imported.')
         )

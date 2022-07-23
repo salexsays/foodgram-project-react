@@ -1,4 +1,5 @@
 import os
+
 # from datetime import timedelta
 
 # from dotenv import load_dotenv
@@ -15,12 +16,6 @@ SECRET_KEY = '&qu-*chic(=vr6b_qzttmw@o4zvb@*se(m=qr3)vei9rg+h-mo'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = [
-#     'localhost',
-#     '127.0.0.1',
-#     '[::1]',
-#     'testserver',
-# ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -33,7 +28,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
-    # 'colorfield',
     'api.apps.ApiConfig',
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
@@ -114,10 +108,6 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
-# STATICFILES_DIRS = [BASE_DIR + '/api/static/']
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
@@ -132,27 +122,19 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 6,
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 6,
 }
 
 DJOSER = {
     'SERIALIZERS': {
-        # 'token_create': 'users.serializers.TokenCreateSerializer',
-        # 'user_create': 'users.serializers.UserRegistrationSerializer',
         'user': 'users.serializers.UserSerializer',
-        # 'current_user': 'users.serializers.UserSerializer',
     },
     'PERMISSIONS': {
         'user': ['rest_framework.permissions.IsAuthenticated'],
         'user_list': ['rest_framework.permissions.AllowAny'],
-    }
-    # 'PERMISSIONS': {
-    #     'user_list': ['recipes.permissions.AuthorOrReadOnly'],
-    #     'user': ['recipes.permissions.AuthorOrReadOnly'],
-    # },
-    # 'HIDE_USERS': False,
+    },
 }

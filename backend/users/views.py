@@ -1,9 +1,3 @@
-# from djoser.views import UserViewSet
-# from rest_framework.permissions import AllowAny
-
-# from .models import User
-# from .serializers import UserSerializer
-
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
@@ -18,9 +12,6 @@ from users.models import User
 
 
 class UserViewSet(UserViewSet):
-    # serializer_class = UserSerializer(many=True)
-    # queryset = User.objects.all()
-    # permission_classes = [AllowAny, ]
 
     pagination_class = CustomPageNumberPaginator
 

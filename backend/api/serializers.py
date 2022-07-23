@@ -1,4 +1,3 @@
-# from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
@@ -215,12 +214,6 @@ class FollowSerializer(serializers.ModelSerializer):
             'recipes',
             'recipes_count',
         )
-
-    # def validate_following(self, following):
-    #     if self.context.get('request').method == 'POST':
-    #         if self.context.get('request').user == following:
-    #             raise ValidationError('Уже подписаны или подписка на себя')
-    #     return following
 
     def get_is_subscribed(self, obj):
         return Follow.objects.filter(user=obj.user, author=obj.author).exists()

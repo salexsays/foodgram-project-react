@@ -14,14 +14,4 @@ urlpatterns = [
     path('', include(router.urls)),
     path('', include('djoser.urls')),
     re_path(r'^auth/', include('djoser.urls.authtoken')),
-    # path(
-    #     'users/<int:author_id>/subscribe/',
-    #     FollowViewSet.as_view({'post': 'create', 'delete': 'destroy'}),
-    #     name='subscribe'
-    # ),
-    # path(
-    #     'users/subscriptions/',
-    #     FollowViewSet.as_view({'get': 'list'}),
-    #     name='subscriptions'
-    # ),
 ]
