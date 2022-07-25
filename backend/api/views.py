@@ -61,6 +61,37 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
+    def get_list(self, request, list_model, pk=None):
+        user = self.request.user
+        recipe = get_object_or_404(Recipe, pk=pk)
+        serializer = FavoritesSerializer(
+            data={'user': request.user.id, 'recipe': recipe.id}
+        )
+        in_list = list_model.objects.filter(user=user, recipe=recipe)
+        if request.method == 'POST':
+            if not in_list:
+                list_objects = list_model.objects.create(
+                    user=user, recipe=recipe
+                )
+                if list_model == Favorite:
+                    # serializer.is_valid(raise_exception=True)
+                    # serializer.save(recipe=recipe, user=request.user)
+                    serializer = RecipeSubscriptionSerializer(recipe)
+                else:
+                    serializer = ShoppingCartSerializer(
+                        list_objects, context={'request': request}
+                    )
+                return Response(
+                    data=serializer.data, status=status.HTTP_201_CREATED
+                )
+
+        # elif request.method == 'DELETE':
+        if not in_list:
+            data = {'errors': 'Этого рецепта нет в списке покупок'}
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+        in_list.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     @action(
         methods=['POST', 'DELETE'],
         url_path='favorite',
@@ -68,21 +99,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[permissions.IsAuthenticated],
         detail=True,
     )
-    def favorite(self, request, pk):
-        recipe = get_object_or_404(Recipe, id=pk)
-        serializer = FavoritesSerializer(
-            data={'user': request.user.id, 'recipe': recipe.id}
-        )
-        if request.method == 'POST':
-            serializer.is_valid(raise_exception=True)
-            serializer.save(recipe=recipe, user=request.user)
-            serializer = RecipeSubscriptionSerializer(recipe)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        favorite = get_object_or_404(
-            Favorite, user=request.user, recipe__id=pk
-        )
-        favorite.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def favorite(self, request, pk=None):
+        return self.get_list(request=request, list_model=Favorite, pk=pk)
 
     @action(
         methods=['POST', 'DELETE'],
@@ -90,25 +108,56 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=(permissions.IsAuthenticated,),
     )
     def shopping_cart(self, request, pk=None):
-        user = request.user
-        recipe = get_object_or_404(Recipe, pk=pk)
-        if request.method == 'POST':
-            if ShoppingCart.objects.filter(user=user, recipe=recipe).exists():
-                data = {'errors': 'Этот рецепт уже есть в списке покупок'}
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            shopping_cart = ShoppingCart.objects.create(
-                user=user, recipe=recipe
-            )
-            serializer = ShoppingCartSerializer(
-                shopping_cart, context={'request': request}
-            )
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        shopping_cart = ShoppingCart.objects.filter(user=user, recipe=recipe)
-        if not shopping_cart.exists():
-            data = {'errors': 'Этого рецепта нет в списке покупок'}
-            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-        shopping_cart.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return self.get_list(request=request, list_model=ShoppingCart, pk=pk)
+
+    # @action(
+    #     methods=['POST', 'DELETE'],
+    #     url_path='favorite',
+    #     url_name='favorite',
+    #     permission_classes=[permissions.IsAuthenticated],
+    #     detail=True,
+    # )
+    # def favorite(self, request, pk):
+    #     recipe = get_object_or_404(Recipe, id=pk)
+    #     serializer = FavoritesSerializer(
+    #         data={'user': request.user.id, 'recipe': recipe.id}
+    #     )
+    #     if request.method == 'POST':
+    #         serializer.is_valid(raise_exception=True)
+    #         serializer.save(recipe=recipe, user=request.user)
+    #         serializer = RecipeSubscriptionSerializer(recipe)
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     favorite = get_object_or_404(
+    #         Favorite, user=request.user, recipe__id=pk
+    #     )
+    #     favorite.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # @action(
+    #     methods=['POST', 'DELETE'],
+    #     detail=True,
+    #     permission_classes=(permissions.IsAuthenticated,),
+    # )
+    # def shopping_cart(self, request, pk=None):
+    #     user = request.user
+    #     recipe = get_object_or_404(Recipe, pk=pk)
+    #     if request.method == 'POST':
+    #         if ShoppingCart.objects.filter(user=user, recipe=recipe).exists():
+    #             data = {'errors': 'Этот рецепт уже есть в списке покупок'}
+    #             return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+    #         shopping_cart = ShoppingCart.objects.create(
+    #             user=user, recipe=recipe
+    #         )
+    #         serializer = ShoppingCartSerializer(
+    #             shopping_cart, context={'request': request}
+    #         )
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     shopping_cart = ShoppingCart.objects.filter(user=user, recipe=recipe)
+    #     if not shopping_cart.exists():
+    #         data = {'errors': 'Этого рецепта нет в списке покупок'}
+    #         return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+    #     shopping_cart.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class DownloadShoppingCart(APIView):

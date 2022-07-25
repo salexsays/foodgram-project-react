@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.serializers import ValidationError
@@ -57,7 +58,10 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 class RecipeReadSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    ingredients = serializers.SerializerMethodField()
+    # ingredients = serializers.SerializerMethodField()
+    ingredients = IngredientAmountSerializer(
+        source='recipe_ingredients', read_only=True, many=True
+    )
     tags = TagSerializer(many=True, read_only=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
@@ -77,9 +81,9 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             'is_in_shopping_cart',
         )
 
-    def get_ingredients(self, obj):
-        queryset = IngredientAmount.objects.filter(recipe=obj)
-        return IngredientAmountSerializer(queryset, many=True).data
+    # def get_ingredients(self, obj):
+    #     queryset = IngredientAmount.objects.filter(recipe=obj)
+    #     return IngredientAmountSerializer(queryset, many=True).data
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
@@ -128,11 +132,20 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         )
 
     def validate_ingredients(self, data):
+        # ingredients = data['ingredients']
+        # ingredients = data
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise ValidationError('Выберите ингредиенты')
-        for ingredient in ingredients:
-            if int(ingredient['amount']) <= 0:
+        ingredient_double = []
+        for ingredient_item in ingredients:
+            ingredient = get_object_or_404(
+                Ingredient, id=ingredient_item['id']
+            )
+            if ingredient in ingredient_double:
+                raise ValidationError('Ингридиенты не должны дублироваться')
+            ingredient_double.append(ingredient)
+            if int(ingredient_item['amount']) <= 0:
                 raise ValidationError(
                     'Убедитесь, что это значение больше либо равно 1.'
                 )
@@ -148,10 +161,20 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     def add_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
-            IngredientAmount.objects.create(
-                recipe=recipe,
-                ingredient=ingredient_id,
-                amount=ingredient.get('amount'),
+            #     IngredientAmount.objects.create(
+            #         recipe=recipe,
+            #         ingredient=ingredient_id,
+            #         amount=ingredient.get('amount'),
+            #     )
+            IngredientAmount.objects.bulk_create(
+                [
+                    IngredientAmount(
+                        ingredient=ingredient_id,
+                        recipe=recipe,
+                        amount=ingredient.get('amount'),
+                    )
+                    # for ingredient in ingredients
+                ]
             )
 
     def create(self, validated_data):
@@ -164,12 +187,12 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, recipe, validated_data):
-        recipe.name = validated_data.get('name', recipe.name)
-        recipe.text = validated_data.get('text', recipe.text)
-        recipe.cooking_time = validated_data.get(
-            'cooking_time', recipe.cooking_time
-        )
-        recipe.image = validated_data.get('image', recipe.image)
+        # recipe.name = validated_data.get('name', recipe.name)
+        # recipe.text = validated_data.get('text', recipe.text)
+        # recipe.cooking_time = validated_data.get(
+        #     'cooking_time', recipe.cooking_time
+        # )
+        # recipe.image = validated_data.get('image', recipe.image)
         if 'ingredients' in self.initial_data:
             ingredients = validated_data.pop('ingredients')
             recipe.ingredients.clear()
@@ -177,8 +200,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         if 'tags' in self.initial_data:
             tags_data = validated_data.pop('tags')
             recipe.tags.set(tags_data)
-        recipe.save()
-        return recipe
+        # recipe.save()
+        # return recipe
+        return super().update(recipe, validated_data)
 
     def to_representation(self, recipe):
         return RecipeReadSerializer(

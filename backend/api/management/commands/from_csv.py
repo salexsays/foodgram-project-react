@@ -1,9 +1,9 @@
 import csv
 import os
 
-from backend.settings import BASE_DIR
 from django.core.management import BaseCommand
 
+from backend.settings import BASE_DIR
 from recipes.models import Ingredient
 
 data_file = 'ingredients.csv'
