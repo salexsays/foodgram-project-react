@@ -58,7 +58,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 class RecipeReadSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
-    # ingredients = serializers.SerializerMethodField()
     ingredients = IngredientAmountSerializer(
         source='recipe_ingredients', read_only=True, many=True
     )
@@ -80,10 +79,6 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             'is_favorited',
             'is_in_shopping_cart',
         )
-
-    # def get_ingredients(self, obj):
-    #     queryset = IngredientAmount.objects.filter(recipe=obj)
-    #     return IngredientAmountSerializer(queryset, many=True).data
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
@@ -132,11 +127,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         )
 
     def validate_ingredients(self, data):
-        # ingredients = data['ingredients']
-        # ingredients = data
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
-            raise ValidationError('Выберите ингредиенты')
+            raise ValidationError('Выберите ингредиенты ')
         ingredient_double = []
         for ingredient_item in ingredients:
             ingredient = get_object_or_404(
@@ -161,11 +154,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     def add_ingredients(self, ingredients, recipe):
         for ingredient in ingredients:
             ingredient_id = ingredient['id']
-            #     IngredientAmount.objects.create(
-            #         recipe=recipe,
-            #         ingredient=ingredient_id,
-            #         amount=ingredient.get('amount'),
-            #     )
             IngredientAmount.objects.bulk_create(
                 [
                     IngredientAmount(
@@ -173,7 +161,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                         recipe=recipe,
                         amount=ingredient.get('amount'),
                     )
-                    # for ingredient in ingredients
                 ]
             )
 
@@ -187,12 +174,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, recipe, validated_data):
-        # recipe.name = validated_data.get('name', recipe.name)
-        # recipe.text = validated_data.get('text', recipe.text)
-        # recipe.cooking_time = validated_data.get(
-        #     'cooking_time', recipe.cooking_time
-        # )
-        # recipe.image = validated_data.get('image', recipe.image)
         if 'ingredients' in self.initial_data:
             ingredients = validated_data.pop('ingredients')
             recipe.ingredients.clear()
@@ -200,8 +181,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         if 'tags' in self.initial_data:
             tags_data = validated_data.pop('tags')
             recipe.tags.set(tags_data)
-        # recipe.save()
-        # return recipe
         return super().update(recipe, validated_data)
 
     def to_representation(self, recipe):
@@ -266,7 +245,7 @@ class FavoritesSerializer(serializers.ModelSerializer):
         user = data['user']
         recipe_id = data['recipe'].id
         if Favorite.objects.filter(user=user, recipe__id=recipe_id).exists():
-            raise ValidationError('Рецепт уже есть в избранном')
+            raise ValidationError({'errors': 'Рецепт уже есть в избранном'})
         return data
 
     def to_representation(self, instance):
