@@ -20,7 +20,6 @@ jobs:
         pip install -r ./backend/requirements.txt 
     - name: Test with flake8
       run: |
-        cd backend
         python -m flake8
 
   build_and_push_to_docker_hub:
@@ -56,7 +55,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          # passphrase: ${{ secrets.PASSPHRASE }}
+          passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             sudo docker-compose stop
             sudo docker-compose rm backend
