@@ -127,7 +127,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         )
 
     def validate_ingredients(self, data):
-        ingredients = self.initial_data.get('ingredients') 
+        ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise ValidationError('Выберите ингредиенты ')
         ingredient_double = []
