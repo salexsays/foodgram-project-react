@@ -97,7 +97,6 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 
 class AddIngredientToRecipeSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(write_only=True)
-    # id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
     amount = serializers.IntegerField()
 
     class Meta:
@@ -129,8 +128,6 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     def validate_ingredients(self, data):
         ingredients = data
-        # ingredients = self.initial_data.get('ingredients')
-        # print(ingredients)
         if not ingredients:
             raise ValidationError('Выберите ингредиенты ')
         ingredient_double = []
