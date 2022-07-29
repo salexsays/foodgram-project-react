@@ -1,6 +1,7 @@
 # praktikum_new_diplom
 ## Foodgram-project-react
 ![foodgram workflow](https://github.com/salexsays/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
+https://github.com/salexsays/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg
 
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/-Django-464646?style=flat-square&logo=Django)](https://www.djangoproject.com/)
@@ -14,7 +15,7 @@
 
 Адрес развёрнутого приложения:
 ```
-http://51.250.31.244 - работа приложения приостановлена
+http://51.250.102.77
 ```
 ### Описание:
 Проект Foodgram продуктовый помощник - платформа для публикации рецептов. 
