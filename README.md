@@ -1,5 +1,4 @@
-# praktikum_new_diplom
-## Foodgram-project-react
+# Foodgram-project-react
 ![foodgram workflow](https://github.com/salexsays/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
 
