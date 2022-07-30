@@ -1,7 +1,7 @@
 # praktikum_new_diplom
 ## Foodgram-project-react
 ![foodgram workflow](https://github.com/salexsays/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
-https://github.com/salexsays/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg
+
 
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/-Django-464646?style=flat-square&logo=Django)](https://www.djangoproject.com/)
@@ -13,12 +13,24 @@ https://github.com/salexsays/yamdb_final/actions/workflows/yamdb_workflow.yml/ba
 [![GitHub%20Actions](https://img.shields.io/badge/-GitHub%20Actions-464646?style=flat-square&logo=GitHub%20actions)](https://github.com/features/actions)
 [![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat-square&logo=Yandex.Cloud)](https://cloud.yandex.ru/)
 
-Адрес развёрнутого приложения:
-```
+### :wrench: Проект доступен по ссылке:
+http://salexsays.ddns.net
+<br>
 http://51.250.102.77
 ```
+<br>
+### :computer: Админка:
+http://salexsays.ddns.net/admin/
+<br>
+Login: admin@admin.ru<br>
+Password: admin<br>
+
+### :closed_book: Документация доступна по ссылке:
+```html
+http://salexsays.ddns.net/api/docs/
+
 ### Описание:
-Проект Foodgram продуктовый помощник - платформа для публикации рецептов. 
+Проект Foodgram «Продуктовый помощник» - онлайн-сервис для публикации рецептов.
 
 ### О проекте:
 В этом сервисе пользователи могут публиковать рецепты, подписываться на
@@ -26,11 +38,22 @@ http://51.250.102.77
 а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления
 одного или нескольких выбранных блюд.
 
-### Технологии:
-- python 3.7
-- django 2.2.19
-- djangorestframework 3.13.1
-- nginx
-- gunicorn
-- PostgreSQL
-- Docker
+### :computer: Технологии
+:small_blue_diamond: Python <br>
+:small_blue_diamond: Django <br>
+:small_blue_diamond: Django REST Framework <br>
+:small_blue_diamond: DRF Simple JWT <br>
+:small_blue_diamond: Docker <br>
+:small_blue_diamond: PostgreSQL <br>
+:small_blue_diamond: Gunicorn <br>
+:small_blue_diamond: Nginx <br>
+
+
+### :bust_in_silhouette: Автор проекта 
+
+### :small_orange_diamond: Алексей Селезнёв
+https://github.com/salexsays
+
+### :scroll: Лицензия
+```sh
+MIT License
