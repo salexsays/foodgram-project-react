@@ -17,7 +17,6 @@
 http://salexsays.ddns.net
 <br>
 http://51.250.102.77
-```
 <br>
 ### :computer: Админка:
 http://salexsays.ddns.net/admin/
@@ -26,7 +25,6 @@ Login: admin@admin.ru<br>
 Password: admin<br>
 
 ### :closed_book: Документация доступна по ссылке:
-```html
 http://salexsays.ddns.net/api/docs/
 
 ### Описание:
